@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Grades Calculator</title>
+    <style>
+        /* Basic styling */
+        body { font-family: Arial, sans-serif; display: flex; justify-content: center; padding: 20px; }
+        .container { max-width: 600vh; }
+        
+        /* Tab styling */
+        .tabs { display: flex; cursor: pointer; }
+        .tab { flex: 1; padding: 10px; text-align: center; background-color: #eee; }
+        .tab.active { background-color: #ccc; font-weight: bold; }
+        
+        /* Table styling */
+        .table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+        .table th, .table td { border: 1px solid #ddd; padding: 10px; text-align: center; }
+        .table th { background-color: #f4f4f4; }
+
+        /* Tab content visibility */
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+        
+        /* Input styling to blend with table */
+        input[type="number"] {
+            width: 100%;
+            padding: 8px;
+            border: none;
+            outline: none;
+            box-sizing: border-box;
+            text-align: center;
+            font-size: inherit;
+            background-color: transparent;
+        }
+
+        input[type="text"] {
+            width: 100%;
+            padding: 8px;
+            border: none;
+            outline: none;
+            box-sizing: border-box;
+            text-align: center;
+            font-size: inherit;
+            background-color: transparent;
+        }
+        
+        /* Result styling */
+        .result-cell { font-weight: bold; color: #333; width: 20%;}
+
+        button {
+            background-color: #7a7b7d; /* Green background */
+            color: white; /* White text */
+            padding: 8px;
+            text-align: center; /* Center the text */
+            text-decoration: none; /* Remove underline */
+            display: inline-block; /* Keep button inline */
+            font-size: 16px; /* Font size */
+            border: none; /* Remove border */
+            border-radius: 8px; /* Rounded corners */
+            cursor: pointer; /* Pointer cursor on hover */
+            transition: background-color 0.3s ease; /* Smooth transition for hover */
+        }
+
+        button:hover {
+            background-color: #cfcfcf; /* Darker green on hover */
+        }
+
+        button:focus {
+            outline: none; /* Remove the default focus outline */
+        }
+
+
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>Grades Calculator</h2>
+    
+    <!-- Tabs -->
+    <div id="tabslist" class="tabs">
+        <div class="tab active" onclick="showTab('homeTab')">Home</div>
+        <div class="tab" onclick="showTab('testTab')">Test</div>
+        <button id="duplicateButton" onclick="duplicateTab()" style="border-radius: 0px;">+</button>
+    </div>
+    
+    <!-- Addition Tab Content -->
+    <div id="homeTab" class="tab-content active">
+        <table class="table">
+            <tr><th>To Be Added:</th></tr>
+            <tr><td>Multiple Subject Tabs</td></tr>
+            <tr><td>GWA Calculator</td></tr>
+            <tr><td>design lmao</td></tr>
+        </table>
+    </div>
+    
+    <!-- Test -->
+    <div id="testTab" class="tab-content">
+        <table class="table">
+            <tr>
+                <th rowspan="2">Grade</th>
+                <th> Raw Grade % </th>
+                <th> Final </th>
+            </tr>
+            <tr>
+                <td><span id="totalSum" oninput="sumContributions('testTab')">0</span></td>
+                <td><span id="finalgrade">0</span></td>
+            </tr>
+        </table>
+        <table class="table">
+            <tr>
+                <th colspan = "4"> Grade Equivalent Ranges </th>
+            </tr>
+            <tr>
+                <th> 1.00 </th>
+                <td><input type="number" id="threshold1" value="92"/></td>
+                <th> 1.25 </th>
+                <td><input type="number" id="threshold2" value="88"/></td>
+            </tr>
+            <tr>
+                <th> 1.75 </th>
+                <td><input type="number" id="threshold3" value="84"/></td>
+                <th> 2.00 </th>
+                <td><input type="number" id="threshold4" value="80"/></td>
+            </tr>
+            <tr>
+                <th> 2.25 </th> 
+                <td><input type="number" id="threshold5" value="76"/></td>
+                <th> 2.50 </th>
+                <td><input type="number" id="threshold6" value="72"/></td>
+            </tr>
+            <tr>
+                <th> 2.75 </th>
+                <td><input type="number" id="threshold7" value="68"/></td>
+                <th> 3.00 </th>
+                <td><input type="number" id="threshold8" value="64"/></td>
+            </tr>
+            <tr>
+                <th colspan="1"> 5.00 </th>
+                <td colspan="3"><input type="number" id="threshold9" value="60"/></td>
+            </tr>
+        </table>
+        <table class="table" id="testTable">
+            <tr>
+                <th colspan="4"> <input type="text" placeholder="Grade Component"> </th>
+                <th colspan="1"> <input type="number" id="percentage" placeholder="Grade %" oninput="updateTable('testTable', this.value)"> </th>
+            </tr>
+            <tr>
+                <th colspan="2">Output</th>
+                <th colspan="2">Score</th>
+                <th colspan="1">Contribution</th>
+            </tr>
+            <tr id="row1" class="data-row">
+                <td colspan="2"> <input type="text" placeholder="Name"> </td>
+                <td><input type="number" placeholder="0" value="0" oninput="updateTable('testTable', document.getElementById('percentage').value)"></td>
+                <td><input type="number" placeholder="0" value="0" oninput="updateTable('testTable', document.getElementById('percentage').value)"></td>
+                <td class="result-cell"><span>0</span></td>
+            </tr>
+            <tr>
+                <td colspan="3">
+                    <button style="width: 100%;" onclick="addRow('testTable', 'percentage')">Add Row</button>
+                </td>
+                <td colspan="3">
+                    <button style="width: 100%;" onclick="deleteRow('testTable', 'percentage')">Delete Row</button>
+                </td>
+            </tr>
+        </table>
+
+        <div style="display: flex; justify-content: center; align-items: center; height: 15vh;">
+            <button onclick="addTable('testTab')">Add Table</button>
+            &nbsp; &nbsp;
+            <button onclick="removeTable('testTab')">Remove Table</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Function to switch between tabs
+    function showTab(tabId) {
+        document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+        document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
+
+        document.getElementById(tabId).classList.add('active');
+        document.querySelector(`.tab[onclick="showTab('${tabId}')"]`).classList.add('active');
+    }
+
+    function sumContributions(containerId) {
+        const container = document.getElementById(containerId);
+        const resultCells = container.querySelectorAll(".result-cell");
+
+        let totalSum = 0;
+        resultCells.forEach(cell => {
+            const cellValue = parseFloat(cell.textContent) || 0;
+            totalSum += cellValue;
+        });
+
+        
+        const threshold1 = parseFloat(document.getElementById("threshold1").value) / 100 || 0.92;
+        const threshold2 = parseFloat(document.getElementById("threshold2").value) / 100 || 0.88;
+        const threshold3 = parseFloat(document.getElementById("threshold3").value) / 100 || 0.84;
+        const threshold4 = parseFloat(document.getElementById("threshold4").value) / 100 || 0.80;
+        const threshold5 = parseFloat(document.getElementById("threshold5").value) / 100 || 0.76;
+        const threshold6 = parseFloat(document.getElementById("threshold6").value) / 100 || 0.72;
+        const threshold7 = parseFloat(document.getElementById("threshold7").value) / 100 || 0.68;
+        const threshold8 = parseFloat(document.getElementById("threshold8").value) / 100 || 0.64;
+        const threshold9 = parseFloat(document.getElementById("threshold9").value) / 100 || 0.60;
+
+        let valueToDisplay;
+        if (totalSum >= threshold1) {
+            valueToDisplay = 1;
+        } else if (totalSum >= threshold2) {
+            valueToDisplay = 1.25;
+        } else if (totalSum >= threshold3) {
+            valueToDisplay = 1.5;
+        } else if (totalSum >= threshold4) {
+            valueToDisplay = 1.75;
+        } else if (totalSum >= threshold5) {
+            valueToDisplay = 2;
+        } else if (totalSum >= threshold6) {
+            valueToDisplay = 2.25;
+        } else if (totalSum >= threshold7) {
+            valueToDisplay = 2.5;
+        } else if (totalSum >= threshold8) {
+            valueToDisplay = 2.75;
+        } else if (totalSum >= threshold9) {
+            valueToDisplay = 3;
+        } else {
+            valueToDisplay = 5;
+        }
+        // Update the text content of the element with id "hey"
+        document.getElementById("finalgrade").textContent = valueToDisplay.toFixed(2);
+
+        totalSum = totalSum * 100;
+        
+        document.getElementById("totalSum").textContent = totalSum.toFixed(2);
+    }
+
+    function duplicateTab() {
+        // const tabContainer = document.getElementById("tabslist");
+        // const testTab = document.getElementById("testTab");
+
+        // if (testTab) {
+        //     // Create a new tab container and clone the content of the original 'Test' tab
+        //     const newTab = testTab.cloneNode(true);
+        //     // Append the new tab to the tab container
+        //     tabContainer.appendChild(newTab);
+        // }
+    }
+
+    observeTab('testTab');
+    function observeTab(tabId) {
+        const targetNode = document.getElementById(tabId);
+        if (!targetNode) return; // Exit if the tab element isn't found
+
+        const config = { childList: true, subtree: true };
+
+        const callback = function (mutationsList, observer) {
+            // Run the function to sum contributions for the specific tab
+            sumContributions(tabId);
+        };
+
+        const observer = new MutationObserver(callback);
+        observer.observe(targetNode, config);
+    }
+
+
+    function addTable(Tab){
+        const tableContainer = document.getElementById(Tab);
+        const newTableId = 'testTable' + (tableContainer.children.length);
+
+        const newTableContainer = document.createElement('div');
+        newTableContainer.classList.add('table-container');
+        newTableContainer.id = newTableId + 'container';
+
+        newTableContainer.innerHTML = `
+            <table class="table" id="${newTableId}">
+                <tr>
+                    <th colspan="4"> <input type="text" placeholder="Grade Component"> </th>
+                    <th colspan="1"> <input type="number" id="percentage${tableContainer.children.length}" placeholder="Grade %" oninput="updateTable('${newTableId}', this.value)"> </th>
+                </tr>
+                <tr>
+                    <th colspan="2">Output</th>
+                    <th colspan="2">Score</th>
+                    <th colspan="1">Contribution</th>
+                </tr>
+                <tr id="row1" class="data-row">
+                    <td colspan="2"> <input type="text" placeholder="Name"> </td>
+                    <td><input type="number" placeholder="0" value="0" oninput="updateTable('${newTableId}', document.getElementById('percentage${tableContainer.children.length}').value)"></td>
+                    <td><input type="number" placeholder="0" value="0" oninput="updateTable('${newTableId}', document.getElementById('percentage${tableContainer.children.length}').value)"></td>
+                    <td class="result-cell"><span>0</span></td>
+                </tr>
+                <tr>
+                    <td colspan="3">
+                        <button style="width: 100%;" onclick="addRow('${newTableId}', 'percentage${tableContainer.children.length}')">Add Row</button>
+                    </td>
+                    <td colspan="3">
+                        <button style="width: 100%;" onclick="deleteRow('${newTableId}', 'percentage${tableContainer.children.length}')">Delete Row</button>
+                    </td>
+                </tr>
+            </table>
+        `;
+
+        tableContainer.insertBefore(newTableContainer, tableContainer.lastElementChild);
+    }
+
+    function removeTable(containerId) {
+        const container = document.getElementById(containerId);
+
+        if (container.children.length > 4) {
+            // Access the second-to-last element
+            const secondToLastElement = container.children[container.children.length - 2];
+            // Remove the second-to-last element
+            secondToLastElement.remove();
+        } else {
+            alert("Cannot delete table, minimum tables required.");
+        }
+    }
+
+    function addRow(tableId, percent) {
+        const table = document.getElementById(tableId);
+        let rowCount = table.getAttribute('data-row-count') || 1;
+        rowCount++; // Increment row count for each new row
+        table.setAttribute('data-row-count', rowCount);
+
+        const newRow = table.insertRow(table.rows.length - 1); // Insert before last row (summary row)
+
+        // Generate unique IDs based on the row count
+        newRow.innerHTML = `
+            <td colspan="2"> <input type="text" placeholder="Name"> </td>
+            <td><input type="number" placeholder="0" value="0" oninput="updateTable('${tableId}', document.getElementById('${percent}').value)"></td>
+            <td><input type="number" placeholder="0" value="0" oninput="updateTable('${tableId}', document.getElementById('${percent}').value)"></td>
+            <td class="result-cell"><span>0</span></td>
+        `;
+        newRow.id = `row${rowCount}`;
+
+        // Update all contributions after adding a row
+        updateTable(tableId, document.getElementById(percent).value);
+    }
+
+    function deleteRow(tableId, percent) {
+        const table = document.getElementById(tableId);
+        
+        // Check if there are more than 2 rows (so we don't delete the header or summary row)
+        if (table.rows.length > 4) {
+            table.deleteRow(table.rows.length - 2); // Delete the second-to-last row (the last data row)
+            
+            // Update all contributions after deleting a row
+            updateTable(tableId, document.getElementById(percent).value);
+        } else {
+            alert("Cannot delete row, minimum rows required.");
+        }
+    }
+
+    function updateTable(tableId, percentage) {
+        var table = document.getElementById(tableId);
+
+        for (var i = 2; i < table.rows.length - 1; i++){
+            var row = table.rows[i];
+            for (var j = 0, col; col = row.cells[j]; j++) {
+                if (j === 3) { // Assuming column index 4 is where the result is located
+                    const score1 = parseFloat(row.cells[1].querySelector("input").value) || 0;
+                    const score2 = parseFloat(row.cells[2].querySelector("input").value) || 0;
+
+                    const result = (score1 / score2) * ((percentage / 100) / (table.rows.length - 3));
+                    col.textContent = result.toFixed(3);  // Update the result cell
+                }
+            }
+        }
+    }
+    
+</script>
+
+</body>
+</html>
