@@ -154,8 +154,8 @@
             </tr>
             <tr id="row1" class="data-row">
                 <td colspan="2"> <input type="text" placeholder="Name"> </td>
-                <td><input type="number" placeholder="0" value="0" oninput="updateTable('testTable', document.getElementById('percentage').value)"></td>
-                <td><input type="number" placeholder="0" value="0" oninput="updateTable('testTable', document.getElementById('percentage').value)"></td>
+                <td><input type="number" value="0" oninput="updateTable('testTable', document.getElementById('percentage').value)"></td>
+                <td><input type="number" value="0" oninput="updateTable('testTable', document.getElementById('percentage').value)"></td>
                 <td class="result-cell"><span>0</span></td>
             </tr>
             <tr>
@@ -287,8 +287,8 @@
                 </tr>
                 <tr id="row1" class="data-row">
                     <td colspan="2"> <input type="text" placeholder="Name"> </td>
-                    <td><input type="number" placeholder="0" value="0" oninput="updateTable('${newTableId}', document.getElementById('percentage${tableContainer.children.length}').value)"></td>
-                    <td><input type="number" placeholder="0" value="0" oninput="updateTable('${newTableId}', document.getElementById('percentage${tableContainer.children.length}').value)"></td>
+                    <td><input type="number" value="0" oninput="updateTable('${newTableId}', document.getElementById('percentage${tableContainer.children.length}').value)"></td>
+                    <td><input type="number" value="0" oninput="updateTable('${newTableId}', document.getElementById('percentage${tableContainer.children.length}').value)"></td>
                     <td class="result-cell"><span>0</span></td>
                 </tr>
                 <tr>
@@ -329,8 +329,8 @@
         // Generate unique IDs based on the row count
         newRow.innerHTML = `
             <td colspan="2"> <input type="text" placeholder="Name"> </td>
-            <td><input type="number" placeholder="0" value="0" oninput="updateTable('${tableId}', document.getElementById('${percent}').value)"></td>
-            <td><input type="number" placeholder="0" value="0" oninput="updateTable('${tableId}', document.getElementById('${percent}').value)"></td>
+            <td><input type="number" value="0" oninput="updateTable('${tableId}', document.getElementById('${percent}').value)"></td>
+            <td><input type="number" value="0" oninput="updateTable('${tableId}', document.getElementById('${percent}').value)"></td>
             <td class="result-cell"><span>0</span></td>
         `;
         newRow.id = `row${rowCount}`;
