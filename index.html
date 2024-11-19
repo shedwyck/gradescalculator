@@ -7,7 +7,7 @@
     <style>
         /* Basic styling */
         body { font-family: Arial, sans-serif; display: flex; justify-content: center; padding: 20px; }
-        .container { max-width: 100%; }
+        .container { max-width: 600vh; }
         
         /* Tab styling */
         .tabs { display: flex; cursor: pointer; }
@@ -24,7 +24,18 @@
         .tab-content.active { display: block; }
         
         /* Input styling to blend with table */
-        input[type="number"], input[type="text"] {
+        input[type="number"] {
+            width: 100%;
+            padding: 8px;
+            border: none;
+            outline: none;
+            box-sizing: border-box;
+            text-align: center;
+            font-size: inherit;
+            background-color: transparent;
+        }
+
+        input[type="text"] {
             width: 100%;
             padding: 8px;
             border: none;
@@ -40,33 +51,33 @@
             font-weight: bold; 
             color: #333; 
             width: 10vh;
-            max-width: 60px;          
-            overflow: hidden;          
-            white-space: nowrap;       
+            max-width: 60px;          /* Set max width */
+            overflow: hidden;          /* Hide overflow */
+            white-space: nowrap;       /* Prevent text from wrapping to a new line */
             text-overflow: ellipsis;
             padding: 10px;
         }
 
         button {
-            background-color: #7a7b7d;
-            color: white;
+            background-color: #7a7b7d; /* Green background */
+            color: white; /* White text */
             padding: 8px;
-            text-align: center;
-            text-decoration: none;
-            display: inline-block;
-            font-size: 16px;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: background-color 0.3s ease;
+            text-align: center; /* Center the text */
+            text-decoration: none; /* Remove underline */
+            display: inline-block; /* Keep button inline */
+            font-size: 16px; /* Font size */
+            border: none; /* Remove border */
+            border-radius: 8px; /* Rounded corners */
+            cursor: pointer; /* Pointer cursor on hover */
+            transition: background-color 0.3s ease; /* Smooth transition for hover */
         }
 
         button:hover {
-            background-color: #cfcfcf;
+            background-color: #cfcfcf; /* Darker green on hover */
         }
 
         button:focus {
-            outline: none;
+            outline: none; /* Remove the default focus outline */
         }
 
     </style>
@@ -83,7 +94,7 @@
         <button id="duplicateButton" onclick="duplicateTab()" style="border-radius: 0px;">+</button>
     </div>
     
-    <!-- Home Tab Content -->
+    <!-- Addition Tab Content -->
     <div id="homeTab" class="tab-content active">
         <table class="table">
             <tr><th>To Be Added:</th></tr>
@@ -93,7 +104,7 @@
         </table>
     </div>
     
-    <!-- Test Tab Content -->
+    <!-- Test -->
     <div id="testTab" class="tab-content">
         <table class="table">
             <tr>
@@ -151,7 +162,7 @@
             </tr>
             <tr id="row1" class="data-row">
                 <td colspan="2"> <input type="text" placeholder="Name"> </td>
-                <td><input type="text" value="0" oninput="updateTable('testTable', document.getElementById('percentage').value)"></td>
+                <td><input type="number" value="0" oninput="updateTable('testTable', document.getElementById('percentage').value)"></td>
                 <td><input type="number" value="0" oninput="updateTable('testTable', document.getElementById('percentage').value)"></td>
                 <td class="result-cell"><span>0</span></td>
             </tr>
@@ -174,6 +185,7 @@
 </div>
 
 <script>
+    // Function to switch between tabs
     function showTab(tabId) {
         document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
         document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
@@ -192,123 +204,183 @@
             totalSum += cellValue;
         });
 
-        const thresholds = Array.from({ length: 9 }, (_, i) => parseFloat(document.getElementById(`threshold${i+1}`).value) / 100 || 0.92 - i * 0.04);
-        let valueToDisplay = thresholds.find((threshold, index) => totalSum >= threshold) || 5;
+        
+        const threshold1 = parseFloat(document.getElementById("threshold1").value) / 100 || 0.92;
+        const threshold2 = parseFloat(document.getElementById("threshold2").value) / 100 || 0.88;
+        const threshold3 = parseFloat(document.getElementById("threshold3").value) / 100 || 0.84;
+        const threshold4 = parseFloat(document.getElementById("threshold4").value) / 100 || 0.80;
+        const threshold5 = parseFloat(document.getElementById("threshold5").value) / 100 || 0.76;
+        const threshold6 = parseFloat(document.getElementById("threshold6").value) / 100 || 0.72;
+        const threshold7 = parseFloat(document.getElementById("threshold7").value) / 100 || 0.68;
+        const threshold8 = parseFloat(document.getElementById("threshold8").value) / 100 || 0.64;
+        const threshold9 = parseFloat(document.getElementById("threshold9").value) / 100 || 0.60;
 
+        let valueToDisplay;
+        if (totalSum >= threshold1) {
+            valueToDisplay = 1;
+        } else if (totalSum >= threshold2) {
+            valueToDisplay = 1.25;
+        } else if (totalSum >= threshold3) {
+            valueToDisplay = 1.5;
+        } else if (totalSum >= threshold4) {
+            valueToDisplay = 1.75;
+        } else if (totalSum >= threshold5) {
+            valueToDisplay = 2;
+        } else if (totalSum >= threshold6) {
+            valueToDisplay = 2.25;
+        } else if (totalSum >= threshold7) {
+            valueToDisplay = 2.5;
+        } else if (totalSum >= threshold8) {
+            valueToDisplay = 2.75;
+        } else if (totalSum >= threshold9) {
+            valueToDisplay = 3;
+        } else {
+            valueToDisplay = 5;
+        }
+        // Update the text content of the element with id "hey"
         document.getElementById("finalgrade").textContent = valueToDisplay.toFixed(2);
 
         totalSum = totalSum * 100;
+        
         document.getElementById("totalSum").textContent = totalSum.toFixed(2);
     }
 
-    function addTable() {
-        const tableContainer = document.getElementById("table-container");
-        const newTableId = `table-${tableContainer.children.length + 1}`;
-        
-        // Create a new table with unique ID and content
-        const newTableContainer = document.createElement("div");
-        newTableContainer.classList.add("table-container");
-        newTableContainer.innerHTML = `
-            <h3>Table ${tableContainer.children.length + 1}</h3>
-            <table id="${newTableId}" class="table">
-                <thead>
-                    <tr>
-                        <th>Name</th>
-                        <th>Score</th>
-                        <th>Percentage</th>
-                        <th>Result</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr class="data-row">
-                        <td><input type="text" placeholder="Enter name"></td>
-                        <td><input type="number" value="0" oninput="updateTable('${newTableId}')"></td>
-                        <td><input type="number" value="0" oninput="updateTable('${newTableId}')"></td>
-                        <td class="result-cell"><span>0</span></td>
-                    </tr>
-                </tbody>
-                <tfoot>
-                    <tr>
-                        <td colspan="4">
-                            <button onclick="addRow('${newTableId}')">Add Row</button>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td colspan="4">
-                            <button onclick="deleteRow('${newTableId}')">Delete Row</button>
-                        </td>
-                    </tr>
-                </tfoot>
-            </table>
-        `;
-        
-        tableContainer.appendChild(newTableContainer);
+    function duplicateTab() {
+        // const tabContainer = document.getElementById("tabslist");
+        // const testTab = document.getElementById("testTab");
+
+        // if (testTab) {
+        //     // Create a new tab container and clone the content of the original 'Test' tab
+        //     const newTab = testTab.cloneNode(true);
+        //     // Append the new tab to the tab container
+        //     tabContainer.appendChild(newTab);
+        // }
     }
 
-    function removeTable(Tab) {
+    observeTab('testTab');
+    function observeTab(tabId) {
+        const targetNode = document.getElementById(tabId);
+        if (!targetNode) return; // Exit if the tab element isn't found
+
+        const config = { childList: true, subtree: true };
+
+        const callback = function (mutationsList, observer) {
+            // Run the function to sum contributions for the specific tab
+            sumContributions(tabId);
+        };
+
+        const observer = new MutationObserver(callback);
+        observer.observe(targetNode, config);
+    }
+
+
+    function addTable(Tab){
         const tableContainer = document.getElementById(Tab);
-        if (tableContainer.children.length > 1) {
-            tableContainer.removeChild(tableContainer.lastElementChild);
+        const newTableId = 'testTable' + (tableContainer.children.length);
+
+        const newTableContainer = document.createElement('div');
+        newTableContainer.classList.add('table-container');
+        newTableContainer.id = newTableId + 'container';
+
+        newTableContainer.innerHTML = `
+            <table class="table" id="${newTableId}">
+                <tr>
+                    <th colspan="4"> <input type="text" placeholder="Grade Component"> </th>
+                    <th colspan="1"> <input type="number" id="percentage${tableContainer.children.length}" placeholder="Grade %" oninput="updateTable('${newTableId}', this.value)"> </th>
+                </tr>
+                <tr>
+                    <th colspan="2">Output</th>
+                    <th colspan="2">Score</th>
+                    <th colspan="1">Contribution</th>
+                </tr>
+                <tr id="row1" class="data-row">
+                    <td colspan="2"> <input type="text" placeholder="Name"> </td>
+                    <td><input type="number" value="0" oninput="updateTable('${newTableId}', document.getElementById('percentage${tableContainer.children.length}').value)"></td>
+                    <td><input type="number" value="0" oninput="updateTable('${newTableId}', document.getElementById('percentage${tableContainer.children.length}').value)"></td>
+                    <td class="result-cell"><span>0</span></td>
+                </tr>
+                <tr>
+                    <td colspan="3">
+                        <button style="width: 100%;" onclick="addRow('${newTableId}', 'percentage${tableContainer.children.length}')">Add Row</button>
+                    </td>
+                    <td colspan="3">
+                        <button style="width: 100%;" onclick="deleteRow('${newTableId}', 'percentage${tableContainer.children.length}')">Delete Row</button>
+                    </td>
+                </tr>
+            </table>
+        `;
+
+        tableContainer.insertBefore(newTableContainer, tableContainer.lastElementChild);
+    }
+
+    function removeTable(containerId) {
+        const container = document.getElementById(containerId);
+
+        if (container.children.length > 4) {
+            // Access the second-to-last element
+            const secondToLastElement = container.children[container.children.length - 2];
+            // Remove the second-to-last element
+            secondToLastElement.remove();
+        } else {
+            alert("Cannot delete table, minimum tables required.");
         }
     }
 
-    function addRow(tableId, percentageId) {
+    function addRow(tableId, percent) {
         const table = document.getElementById(tableId);
-        const rowCount = table.rows.length;
-        const newRow = table.insertRow(rowCount - 2);  // Insert before the buttons
+        let rowCount = table.getAttribute('data-row-count') || 1;
+        rowCount++; // Increment row count for each new row
+        table.setAttribute('data-row-count', rowCount);
 
+        const newRow = table.insertRow(table.rows.length - 1); // Insert before last row (summary row)
+        newRow.classList.add('data-row');
+
+        // Generate unique IDs based on the row count
         newRow.innerHTML = `
-            <td colspan="2"><input type="text" placeholder="Name"></td>
-            <td><input type="text" value="0" oninput="updateTable('${tableId}', document.getElementById('${percentageId}').value)"></td>
-            <td><input type="number" value="0" oninput="updateTable('${tableId}', document.getElementById('${percentageId}').value)"></td>
+            <td colspan="2"> <input type="text" placeholder="Name"> </td>
+            <td><input type="number" value="0" oninput="updateTable('${tableId}', document.getElementById('${percent}').value)"></td>
+            <td><input type="number" value="0" oninput="updateTable('${tableId}', document.getElementById('${percent}').value)"></td>
             <td class="result-cell"><span>0</span></td>
         `;
+        newRow.id = `row${rowCount}`;
+
+        // Update all contributions after adding a row
+        updateTable(tableId, document.getElementById(percent).value);
     }
 
-    function deleteRow(tableId, percentageId) {
+    function deleteRow(tableId, percent) {
         const table = document.getElementById(tableId);
-        if (table.rows.length > 3) {  // Keep at least one row
-            table.deleteRow(table.rows.length - 3);
+        
+        // Check if there are more than 2 rows (so we don't delete the header or summary row)
+        if (table.rows.length > 4) {
+            table.deleteRow(table.rows.length - 2); // Delete the second-to-last row (the last data row)
+            
+            // Update all contributions after deleting a row
+            updateTable(tableId, document.getElementById(percent).value);
+        } else {
+            alert("Cannot delete row, minimum rows required.");
         }
     }
 
     function updateTable(tableId, percentage) {
         const table = document.getElementById(tableId);
-        const rows = table.querySelectorAll("tr.data-row");
+        const rows = table.querySelectorAll("tr.data-row");  // Select rows with the class 'data-row'
+
         rows.forEach(row => {
-            const scoreCell = row.querySelector("td:nth-child(3) input");
-            const percentageValue = parseFloat(percentage) || 0;
+            // Get the input values from the 2nd and 3rd columns (index 1 and 2)
+            const score1 = parseFloat(row.querySelector("td:nth-child(2) input").value) || 0;
+            const score2 = parseFloat(row.querySelector("td:nth-child(3) input").value) || 0;
 
-            const score = (parseFloat(scoreCell.value) || 0) * percentageValue;
-            row.querySelector(".result-cell span").textContent = score.toFixed(2);
+            // Calculate the result
+            const result = (score1 / score2) * ((percentage / 100) / (table.rows.length - 3));
+
+            // Update the result in the 4th column (where the result cell is)
+            const resultCell = row.querySelector("td:nth-child(4)");
+            resultCell.textContent = result.toFixed(2);  // Format the result to 2 decimal places
         });
-        sumContributions(tableId);
+
     }
-
-    function duplicateTab() {
-        const tabsList = document.getElementById("tabslist");
-        const tabCount = tabsList.querySelectorAll(".tab").length;
-        const newTabId = 'tab' + tabCount;
-
-        const newTab = document.createElement("div");
-        newTab.classList.add("tab");
-        newTab.textContent = `Tab ${tabCount + 1}`;
-        newTab.setAttribute("onclick", `showTab('${newTabId}')`);
-        tabsList.insertBefore(newTab, document.getElementById("duplicateButton"));
-
-        const newTabContent = document.createElement("div");
-        newTabContent.classList.add("tab-content");
-        newTabContent.id = newTabId;
-        newTabContent.innerHTML = `
-            <table class="table">
-                <tr><th>To Be Added:</th></tr>
-                <tr><td>Multiple Subject Tabs</td></tr>
-                <tr><td>GWA Calculator</td></tr>
-                <tr><td>Design lmao</td></tr>
-            </table>
-        `;
-        document.querySelector(".container").appendChild(newTabContent);
-    }
+    
 </script>
 
 </body>
