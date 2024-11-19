@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Grades Calculator</title>
+    <style>
+        /* Basic styling */
+        body { font-family: Arial, sans-serif; display: flex; justify-content: center; padding: 20px; }
+        .container { max-width: 100%; }
+        
+        /* Tab styling */
+        .tabs { display: flex; cursor: pointer; }
+        .tab { flex: 1; padding: 10px; text-align: center; background-color: #eee; }
+        .tab.active { background-color: #ccc; font-weight: bold; }
+        
+        /* Table styling */
+        .table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+        .table th, .table td { border: 1px solid #ddd; padding: 10px; text-align: center; }
+        .table th { background-color: #f4f4f4; }
+
+        /* Tab content visibility */
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+        
+        /* Input styling to blend with table */
+        input[type="number"], input[type="text"] {
+            width: 100%;
+            padding: 8px;
+            border: none;
+            outline: none;
+            box-sizing: border-box;
+            text-align: center;
+            font-size: inherit;
+            background-color: transparent;
+        }
+        
+        /* Result styling */
+        .result-cell{ 
+            font-weight: bold; 
+            color: #333; 
+            width: 10vh;
+            max-width: 60px;          
+            overflow: hidden;          
+            white-space: nowrap;       
+            text-overflow: ellipsis;
+            padding: 10px;
+        }
+
+        button {
+            background-color: #7a7b7d;
+            color: white;
+            padding: 8px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #cfcfcf;
+        }
+
+        button:focus {
+            outline: none;
+        }
+
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>Grades Calculator</h2>
+    
+    <!-- Tabs -->
+    <div id="tabslist" class="tabs">
+        <div class="tab active" onclick="showTab('homeTab')">Home</div>
+        <div class="tab" onclick="showTab('testTab')">Test</div>
+        <button id="duplicateButton" onclick="duplicateTab()" style="border-radius: 0px;">+</button>
+    </div>
+    
+    <!-- Home Tab Content -->
+    <div id="homeTab" class="tab-content active">
+        <table class="table">
+            <tr><th>To Be Added:</th></tr>
+            <tr><td>Multiple Subject Tabs</td></tr>
+            <tr><td>GWA Calculator</td></tr>
+            <tr><td>design lmao</td></tr>
+        </table>
+    </div>
+    
+    <!-- Test Tab Content -->
+    <div id="testTab" class="tab-content">
+        <table class="table">
+            <tr>
+                <th rowspan="2">Grade</th>
+                <th> Raw Grade % </th>
+                <th> Final </th>
+            </tr>
+            <tr>
+                <td><span id="totalSum" oninput="sumContributions('testTab')">0</span></td>
+                <td><span id="finalgrade">0</span></td>
+            </tr>
+        </table>
+        <table class="table">
+            <tr>
+                <th colspan = "4"> Grade Equivalent Ranges </th>
+            </tr>
+            <tr>
+                <th> 1.00 </th>
+                <td><input type="number" id="threshold1" value="92" /></td>
+                <th> 1.25 </th>
+                <td><input type="number" id="threshold2" value="88"/></td>
+            </tr>
+            <tr>
+                <th> 1.75 </th>
+                <td><input type="number" id="threshold3" value="84"/></td>
+                <th> 2.00 </th>
+                <td><input type="number" id="threshold4" value="80"/></td>
+            </tr>
+            <tr>
+                <th> 2.25 </th> 
+                <td><input type="number" id="threshold5" value="76"/></td>
+                <th> 2.50 </th>
+                <td><input type="number" id="threshold6" value="72"/></td>
+            </tr>
+            <tr>
+                <th> 2.75 </th>
+                <td><input type="number" id="threshold7" value="68"/></td>
+                <th> 3.00 </th>
+                <td><input type="number" id="threshold8" value="64"/></td>
+            </tr>
+            <tr>
+                <th colspan="1"> 5.00 </th>
+                <td colspan="3"><input type="number" id="threshold9" value="60"/></td>
+            </tr>
+        </table>
+        <table class="table" id="testTable">
+            <tr>
+                <th colspan="4"> <input type="text" placeholder="Grade Component"> </th>
+                <th colspan="1"> <input type="number" id="percentage" placeholder="Grade %" oninput="updateTable('testTable', this.value)"> </th>
+            </tr>
+            <tr>
+                <th colspan="2">Output</th>
+                <th colspan="2">Score</th>
+                <th colspan="1">Contribution</th>
+            </tr>
+            <tr id="row1" class="data-row">
+                <td colspan="2"> <input type="text" placeholder="Name"> </td>
+                <td><input type="text" value="0" oninput="updateTable('testTable', document.getElementById('percentage').value)"></td>
+                <td><input type="number" value="0" oninput="updateTable('testTable', document.getElementById('percentage').value)"></td>
+                <td class="result-cell"><span>0</span></td>
+            </tr>
+            <tr>
+                <td colspan="3">
+                    <button style="width: 100%;" onclick="addRow('testTable', 'percentage')">Add Row</button>
+                </td>
+                <td colspan="3">
+                    <button style="width: 100%;" onclick="deleteRow('testTable', 'percentage')">Delete Row</button>
+                </td>
+            </tr>
+        </table>
+
+        <div style="display: flex; justify-content: center; align-items: center; height: 15vh;">
+            <button onclick="addTable('testTab')">Add Table</button>
+            &nbsp; &nbsp;
+            <button onclick="removeTable('testTab')">Remove Table</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    function showTab(tabId) {
+        document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+        document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
+
+        document.getElementById(tabId).classList.add('active');
+        document.querySelector(`.tab[onclick="showTab('${tabId}')"]`).classList.add('active');
+    }
+
+    function sumContributions(containerId) {
+        const container = document.getElementById(containerId);
+        const resultCells = container.querySelectorAll(".result-cell");
+
+        let totalSum = 0;
+        resultCells.forEach(cell => {
+            const cellValue = parseFloat(cell.textContent) || 0;
+            totalSum += cellValue;
+        });
+
+        const thresholds = Array.from({ length: 9 }, (_, i) => parseFloat(document.getElementById(`threshold${i+1}`).value) / 100 || 0.92 - i * 0.04);
+        let valueToDisplay = thresholds.find((threshold, index) => totalSum >= threshold) || 5;
+
+        document.getElementById("finalgrade").textContent = valueToDisplay.toFixed(2);
+
+        totalSum = totalSum * 100;
+        document.getElementById("totalSum").textContent = totalSum.toFixed(2);
+    }
+
+    function addTable() {
+        const tableContainer = document.getElementById("table-container");
+        const newTableId = `table-${tableContainer.children.length + 1}`;
+        
+        // Create a new table with unique ID and content
+        const newTableContainer = document.createElement("div");
+        newTableContainer.classList.add("table-container");
+        newTableContainer.innerHTML = `
+            <h3>Table ${tableContainer.children.length + 1}</h3>
+            <table id="${newTableId}" class="table">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Score</th>
+                        <th>Percentage</th>
+                        <th>Result</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class="data-row">
+                        <td><input type="text" placeholder="Enter name"></td>
+                        <td><input type="number" value="0" oninput="updateTable('${newTableId}')"></td>
+                        <td><input type="number" value="0" oninput="updateTable('${newTableId}')"></td>
+                        <td class="result-cell"><span>0</span></td>
+                    </tr>
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <td colspan="4">
+                            <button onclick="addRow('${newTableId}')">Add Row</button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="4">
+                            <button onclick="deleteRow('${newTableId}')">Delete Row</button>
+                        </td>
+                    </tr>
+                </tfoot>
+            </table>
+        `;
+        
+        tableContainer.appendChild(newTableContainer);
+    }
+
+    function removeTable(Tab) {
+        const tableContainer = document.getElementById(Tab);
+        if (tableContainer.children.length > 1) {
+            tableContainer.removeChild(tableContainer.lastElementChild);
+        }
+    }
+
+    function addRow(tableId, percentageId) {
+        const table = document.getElementById(tableId);
+        const rowCount = table.rows.length;
+        const newRow = table.insertRow(rowCount - 2);  // Insert before the buttons
+
+        newRow.innerHTML = `
+            <td colspan="2"><input type="text" placeholder="Name"></td>
+            <td><input type="text" value="0" oninput="updateTable('${tableId}', document.getElementById('${percentageId}').value)"></td>
+            <td><input type="number" value="0" oninput="updateTable('${tableId}', document.getElementById('${percentageId}').value)"></td>
+            <td class="result-cell"><span>0</span></td>
+        `;
+    }
+
+    function deleteRow(tableId, percentageId) {
+        const table = document.getElementById(tableId);
+        if (table.rows.length > 3) {  // Keep at least one row
+            table.deleteRow(table.rows.length - 3);
+        }
+    }
+
+    function updateTable(tableId, percentage) {
+        const table = document.getElementById(tableId);
+        const rows = table.querySelectorAll("tr.data-row");
+        rows.forEach(row => {
+            const scoreCell = row.querySelector("td:nth-child(3) input");
+            const percentageValue = parseFloat(percentage) || 0;
+
+            const score = (parseFloat(scoreCell.value) || 0) * percentageValue;
+            row.querySelector(".result-cell span").textContent = score.toFixed(2);
+        });
+        sumContributions(tableId);
+    }
+
+    function duplicateTab() {
+        const tabsList = document.getElementById("tabslist");
+        const tabCount = tabsList.querySelectorAll(".tab").length;
+        const newTabId = 'tab' + tabCount;
+
+        const newTab = document.createElement("div");
+        newTab.classList.add("tab");
+        newTab.textContent = `Tab ${tabCount + 1}`;
+        newTab.setAttribute("onclick", `showTab('${newTabId}')`);
+        tabsList.insertBefore(newTab, document.getElementById("duplicateButton"));
+
+        const newTabContent = document.createElement("div");
+        newTabContent.classList.add("tab-content");
+        newTabContent.id = newTabId;
+        newTabContent.innerHTML = `
+            <table class="table">
+                <tr><th>To Be Added:</th></tr>
+                <tr><td>Multiple Subject Tabs</td></tr>
+                <tr><td>GWA Calculator</td></tr>
+                <tr><td>Design lmao</td></tr>
+            </table>
+        `;
+        document.querySelector(".container").appendChild(newTabContent);
+    }
+</script>
+
+</body>
+</html>
