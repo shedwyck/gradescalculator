@@ -91,7 +91,7 @@
     <div id="tabslist" class="tabs">
         <div class="tab active" onclick="showTab('homeTab')">Home</div>
         <div class="tab" onclick="showTab('testTab')">Test</div>
-        <div class="tab" onclick="showTab('otherTab')">Test</div>
+        <div class="tab" onclick="showTab('otherTab')">180</div>
         <button id="duplicateButton" onclick="duplicateTab()" style="border-radius: 0px;">+</button>
     </div>
     
@@ -104,12 +104,82 @@
         </table>
     </div>
 
-    <div id="otherTab" class="tab-content active">
+    <div id="otherTab" class="tab-content">
         <table class="table">
-            <tr><th>My Other Projects</th></tr>
-            <tr><td><a href="https://docs.google.com/spreadsheets/d/1Ekb6OqpV2mh4k2Gc6uDu0wRp7BNCWa-2oPBz2OgnnSs/copy">BS CS Curriculum Checker</a></td></tr>
-            <tr><td><a href="https://docs.google.com/spreadsheets/d/18xwqYzMEK02Qfj5Gu6646WYbRbDd6ChPxgYoX6QxAM0/copy">BS Arki Curriculum Checker</a></td></tr>
+            <tr>
+                <th rowspan="2">Grade</th>
+                <th> Raw Grade % </th>
+                <th> Final </th>
+            </tr>
+            <tr>
+                <td><span id="totalSum" oninput="sumContributions('testTab')">0</span></td>
+                <td><span id="finalgrade">0</span></td>
+            </tr>
         </table>
+        <table class="table">
+            <tr>
+                <th colspan = "4"> Grade Equivalent Ranges </th>
+            </tr>
+            <tr>
+                <th> 1.00 </th>
+                <td><input type="number" id="threshold1" value="92" /></td>
+                <th> 1.25 </th>
+                <td><input type="number" id="threshold2" value="88"/></td>
+            </tr>
+            <tr>
+                <th> 1.75 </th>
+                <td><input type="number" id="threshold3" value="84"/></td>
+                <th> 2.00 </th>
+                <td><input type="number" id="threshold4" value="80"/></td>
+            </tr>
+            <tr>
+                <th> 2.25 </th> 
+                <td><input type="number" id="threshold5" value="76"/></td>
+                <th> 2.50 </th>
+                <td><input type="number" id="threshold6" value="72"/></td>
+            </tr>
+            <tr>
+                <th> 2.75 </th>
+                <td><input type="number" id="threshold7" value="68"/></td>
+                <th> 3.00 </th>
+                <td><input type="number" id="threshold8" value="64"/></td>
+            </tr>
+            <tr>
+                <th colspan="1"> 5.00 </th>
+                <td colspan="3"><input type="number" id="threshold9" value="60"/></td>
+            </tr>
+        </table>
+        <table class="table" id="testTable">
+            <tr>
+                <th colspan="4"> <input type="text" placeholder="Grade Component"> </th>
+                <th colspan="1"> <input type="number" id="percentage" placeholder="Grade %" oninput="updateTable('testTable', this.value)"> </th>
+            </tr>
+            <tr>
+                <th colspan="2">Output</th>
+                <th colspan="2">Score</th>
+                <th colspan="1">Contribution</th>
+            </tr>
+            <tr id="row1" class="data-row">
+                <td colspan="2"> <input type="text" placeholder="Name"> </td>
+                <td><input type="number" value="0" oninput="updateTable('testTable', document.getElementById('percentage').value)"></td>
+                <td><input type="number" value="0" oninput="updateTable('testTable', document.getElementById('percentage').value)"></td>
+                <td class="result-cell"><span>0</span></td>
+            </tr>
+            <tr>
+                <td colspan="3">
+                    <button style="width: 100%;" onclick="addRow('testTable', 'percentage')">Add Row</button>
+                </td>
+                <td colspan="3">
+                    <button style="width: 100%;" onclick="deleteRow('testTable', 'percentage')">Delete Row</button>
+                </td>
+            </tr>
+        </table>
+
+        <div style="display: flex; justify-content: center; align-items: center; height: 15vh;">
+            <button onclick="addTable('testTab')">Add Table</button>
+            &nbsp; &nbsp;
+            <button onclick="removeTable('testTab')">Remove Table</button>
+        </div>
     </div>
     
     <!-- Test -->
